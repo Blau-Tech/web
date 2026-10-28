@@ -1,0 +1,129 @@
+/* "Add to calendar" on listing pages: a quiet second action beside the
+   primary link, opening a short menu of calendar apps. */
+
+.add-to-calendar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.add-to-calendar svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.add-to-calendar .add-to-calendar__chevron {
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0.7;
+  transition: transform var(--blau-motion-fast, 200ms) ease;
+}
+
+.add-to-calendar[aria-expanded='true'] .add-to-calendar__chevron {
+  transform: rotate(180deg);
+}
+
+/* Over the listing image: an outline twin of the white primary pill. */
+.add-to-calendar--hero {
+  min-height: 2.75rem;
+  margin-top: 1.1rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.add-to-calendar--hero:hover,
+.add-to-calendar--hero[aria-expanded='true'] {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* In the details column: matches the underlined text actions there. */
+.add-to-calendar--inline {
+  min-height: 2.5rem;
+  padding: 0;
+  border-bottom: 1px solid currentColor;
+  color: var(--blau-text-primary);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.add-to-calendar:focus-visible {
+  outline: 2px solid var(--blau-accent);
+  outline-offset: 3px;
+}
+
+.add-to-calendar__menu {
+  position: fixed;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  padding: 0.35rem;
+  border: 1px solid var(--blau-hairline);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 1px 2px rgba(11, 15, 25, 0.06), 0 8px 24px -16px rgba(11, 15, 25, 0.3);
+  color: var(--blau-text-primary);
+  animation: add-to-calendar-in 140ms ease-out;
+}
+
+.add-to-calendar__caption {
+  margin: 0;
+  padding: 0.55rem 0.7rem 0.45rem;
+  color: var(--blau-text-muted);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.add-to-calendar__item {
+  display: flex;
+  width: 100%;
+  min-height: 2.35rem;
+  align-items: center;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 560;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.add-to-calendar__item:hover,
+.add-to-calendar__item:focus-visible {
+  outline: none;
+  background: var(--blau-panel);
+}
+
+.add-to-calendar__item--quiet {
+  margin-top: 0.25rem;
+  border-top: 1px solid var(--blau-hairline);
+  border-radius: 0 0 0.6rem 0.6rem;
+  color: var(--blau-text-secondary);
+  font-size: 0.76rem;
+}
+
+@keyframes add-to-calendar-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .add-to-calendar__menu { animation: none; }
+}

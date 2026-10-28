@@ -1,0 +1,7 @@
+# robots.txt for Blau Tech
+# https://www.blau-tech.de/robots.txt
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.blau-tech.de/sitemap.xml

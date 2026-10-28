@@ -1,0 +1,170 @@
+/* The home hero's ticker: this week's listings drifting past on one line. */
+
+.live-pulse {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: clamp(0.75rem, 2.4vh, 1.75rem);
+  left: 0;
+  display: flex;
+  width: min(calc(100% - 2rem), 72rem);
+  align-items: center;
+  gap: 1.75rem;
+  margin: 0 auto;
+  animation: live-pulse-in 700ms 1.1s ease-out both;
+}
+
+.live-pulse__label {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--blau-text-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.live-pulse__dot {
+  position: relative;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--blau-accent);
+}
+
+.live-pulse__dot--live {
+  background: var(--blau-new);
+}
+
+
+.live-pulse__viewport {
+  position: relative;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 92%, transparent);
+}
+
+.live-pulse__track {
+  display: flex;
+  width: max-content;
+  animation: live-pulse-scroll var(--live-pulse-duration, 60s) linear infinite;
+}
+
+.live-pulse:hover .live-pulse__track,
+.live-pulse:focus-within .live-pulse__track,
+.live-pulse--paused .live-pulse__track {
+  animation-play-state: paused;
+}
+
+.live-pulse__segment {
+  flex: 0 0 auto;
+}
+
+.live-pulse__run {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.live-pulse__item {
+  display: flex;
+  align-items: center;
+}
+
+/* Space, not a rule, between listings; the run's last one pairs with the echo's first. */
+.live-pulse__item::after {
+  width: 2.5rem;
+  content: '';
+}
+
+.live-pulse__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  color: var(--blau-text-primary);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.live-pulse__when {
+  color: var(--blau-text-muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-pulse__when--live {
+  color: var(--blau-new);
+}
+
+.live-pulse__title {
+  max-width: 34ch;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+}
+
+.live-pulse__city {
+  color: var(--blau-text-muted);
+  font-size: 0.72rem;
+}
+
+.live-pulse__link:hover .live-pulse__title,
+.live-pulse__link:focus-visible .live-pulse__title {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.live-pulse__link:focus-visible {
+  outline: 2px solid var(--blau-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@keyframes live-pulse-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes live-pulse-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .live-pulse {
+    gap: 0.9rem;
+  }
+
+  .live-pulse__title {
+    max-width: 24ch;
+  }
+}
+
+/* No drift: the run becomes a row you can swipe or scroll through. */
+@media (prefers-reduced-motion: reduce) {
+  .live-pulse {
+    animation: none;
+  }
+
+  .live-pulse__track {
+    animation: none;
+  }
+
+  .live-pulse__viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .live-pulse__segment--echo {
+    display: none;
+  }
+}
