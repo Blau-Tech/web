@@ -83,7 +83,7 @@ export default function TimedAlert() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={handleDismiss}
-            className="fixed inset-0 z-40 bg-brand-ink/20 backdrop-blur-[2px] lg:hidden"
+            className="fixed inset-0 z-[45] bg-brand-ink/40 backdrop-blur-[2px]"
           />
 
           <motion.div
@@ -91,14 +91,14 @@ export default function TimedAlert() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:inset-auto lg:bottom-[4.75rem] lg:right-4 lg:p-0"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
             id="community-alert-dialog"
             role="dialog"
             aria-modal="true"
             aria-labelledby="community-alert-title"
             aria-describedby="community-alert-description"
           >
-            <div className={isCompact ? 'w-full max-w-[23rem]' : 'w-full max-w-md lg:w-[28rem]'}>
+            <div className={isCompact ? 'w-full max-w-[23rem]' : 'w-full max-w-md'}>
               <div className={`relative max-h-[calc(100svh-2rem)] overflow-x-hidden overflow-y-auto rounded-[1.625rem] bg-brand-ground font-brand text-white ${
                 isCompact ? 'p-4 sm:p-5' : 'p-5 sm:p-6'
               }`}>
