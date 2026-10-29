@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from '../../lib/router';
 import BrandLink from '../common/BrandLink';
 import NavFlyoutArtwork from './NavFlyoutArtwork';
+import { openNewsletter } from '../../lib/newsletter';
 
 const SITE_ORIGIN = 'https://www.blau-tech.de';
 const DEFAULT_PAGE_METADATA = Object.freeze({
@@ -66,16 +68,30 @@ function updateDocumentMetadata(pathname) {
 }
 
 const PUBLIC_NAV_ITEMS = [
-  { label: 'Events', href: '/discover/events', opportunityType: 'events', hasFlyout: true },
-  { label: 'Programs', href: '/discover/programs', opportunityType: 'programs', hasFlyout: true },
+  { label: 'Discover', href: '/discover/events', opportunityType: 'events', hasFlyout: true },
   { label: 'For organisers', href: '/partners', hasFlyout: true },
   { label: 'Submit an event', href: '/partners#submit-event', action: 'primary' },
 ];
+// The Discover flyout replaces the old Events and Programs entries, so the
+// stacked mobile menu lists those destinations directly.
+const MOBILE_DISCOVER_ITEMS = [
+  { label: 'Events', href: '/discover/events', opportunityType: 'events' },
+  { label: 'Hackathons', href: '/discover/hackathons', opportunityType: 'hackathons' },
+  { label: 'Programs', href: '/discover/programs', opportunityType: 'programs' },
+];
 const PUBLIC_NAV_MAIN_ITEMS = PUBLIC_NAV_ITEMS.filter((item) => !item.action);
 const PUBLIC_NAV_ACTION_ITEMS = PUBLIC_NAV_ITEMS.filter((item) => item.action);
+const MOBILE_NAV_ITEMS = [
+  ...MOBILE_DISCOVER_ITEMS,
+  ...PUBLIC_NAV_ITEMS.filter((item) => item.label !== 'Discover'),
+];
 const REQUEST_CITY_LINK = [
   'Request your city',
   'mailto:partner@blau-tech.de?subject=Request%20a%20city%20on%20Blau%20Tech',
+];
+const FIND_TALENT_LINK = [
+  'Find talent',
+  'mailto:partner@blau-tech.de?subject=Hire%20from%20the%20Blau%20Tech%20community',
 ];
 const ORGANISER_UTILITY_LINK = [
   'Bring Blau Tech to your city',
@@ -83,43 +99,30 @@ const ORGANISER_UTILITY_LINK = [
 ];
 
 const NAV_FLYOUTS = {
-  Events: [
-    ['Explore events', [
+  Discover: [
+    ['Explore Blau Tech', [
       ['Munich', '/discover/events?cities=munich&types=events'],
       ['Berlin', '/discover/events?cities=berlin&types=events'],
-      ['All Events', '/discover/events?types=events'],
     ], REQUEST_CITY_LINK],
-    ['Events', [
-      ['Browse all events', '/discover/events?types=events'],
+    ['Events & hackathons', [
+      ['Events', '/discover/events?types=events'],
+      ['Hackathons', '/discover/hackathons?types=hackathons'],
     ]],
-    ['Hackathons', [
-      ['Browse all hackathons', '/discover/hackathons?types=hackathons'],
-    ]],
-  ],
-  Programs: [
-    ['Explore programs', [
-      ['Munich', '/discover/programs?cities=munich&types=programs'],
-      ['Berlin', '/discover/programs?cities=berlin&types=programs'],
-      ['All Programs', '/discover/programs?types=programs'],
-    ], REQUEST_CITY_LINK],
-    ['For individuals', [
-      ['Fellowships & learning programs', '/discover/programs?types=programs&programType=LEARNING'],
-      ['Residencies & hacker houses', '/discover/programs?types=programs&programType=RESIDENCY'],
+    ['Programs', [
+      ['Fellowships', '/discover/programs?types=programs&programType=LEARNING'],
+      ['Hacker houses', '/discover/programs?types=programs&programType=RESIDENCY'],
+      ['All programs', '/discover/programs?types=programs'],
     ]],
   ],
   'For organisers': [
     ['Work with Blau Tech', [
-      ['For organisers', '/partners'],
-      ['Submit an opportunity', '/partners#submit-event'],
+      ['Submit an event', '/partners#submit-event'],
+      ['Find talent', FIND_TALENT_LINK[1]],
     ], ORGANISER_UTILITY_LINK],
-    ['Why organise with us', [
+    ['Learn more', [
       ['Where your event goes', '/partners#why-organize'],
       ['Who you reach', '/partners#audience'],
       ['Co-host or partner', '/partners#work-with-us'],
-    ]],
-    ['Contact', [
-      ['Partner with us', '/partners#partner-with-us'],
-      ['Email Blau Tech', 'mailto:partner@blau-tech.de'],
     ]],
   ],
 };
@@ -139,6 +142,47 @@ function PublicNavDestination({ href, children, ...props }) {
   }
 
   return <Link to={href} {...props}>{children}</Link>;
+}
+
+const BANNER_DISMISS_KEY = 'blau-newsletter-banner-dismissed';
+
+function readBannerDismissed() {
+  try {
+    return sessionStorage.getItem(BANNER_DISMISS_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function SiteBanner() {
+  const [dismissed, setDismissed] = useState(readBannerDismissed);
+
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle('site-banner-dismissed', dismissed);
+  }, [dismissed]);
+
+  if (dismissed) return null;
+
+  const dismiss = () => {
+    try {
+      sessionStorage.setItem(BANNER_DISMISS_KEY, '1');
+    } catch {
+      // Private browsing can block storage; the banner still closes for this view.
+    }
+    setDismissed(true);
+  };
+
+  return (
+    <div className="site-banner">
+      <button type="button" className="site-banner__message" onClick={() => openNewsletter()}>
+        <span>Subscribe to our <span className="site-banner__word">newsletter</span></span>
+        <ArrowTopRightOnSquareIcon aria-hidden="true" />
+      </button>
+      <button type="button" className="site-banner__close" aria-label="Dismiss" onClick={dismiss}>
+        <XMarkIcon aria-hidden="true" />
+      </button>
+    </div>
+  );
 }
 
 function BlauGlobalNavigation({ isOpen, onToggle, onClose, locationSearch, navRef }) {
@@ -175,12 +219,14 @@ function BlauGlobalNavigation({ isOpen, onToggle, onClose, locationSearch, navRe
 
   return (
     <>
-      <header
-        ref={navRef}
-        className={`apple-global-nav${isOpen ? ' apple-global-nav--open' : ''}${activeFlyout ? ' apple-global-nav--flyout-open' : ''}${isScrolled ? ' apple-global-nav--scrolled' : ''}`}
-        onMouseLeave={closeFlyout}
-        onBlur={handleHeaderBlur}
-      >
+      <div className="site-chrome">
+        <SiteBanner />
+        <header
+          ref={navRef}
+          className={`apple-global-nav${isOpen ? ' apple-global-nav--open' : ''}${activeFlyout ? ' apple-global-nav--flyout-open' : ''}${isScrolled ? ' apple-global-nav--scrolled' : ''}`}
+          onMouseLeave={closeFlyout}
+          onBlur={handleHeaderBlur}
+        >
         <nav className="apple-global-nav__content" aria-label="Primary navigation">
           <div className="apple-global-nav__list">
             <div className="apple-global-nav__brand" onMouseEnter={closeFlyout}>
@@ -269,7 +315,7 @@ function BlauGlobalNavigation({ isOpen, onToggle, onClose, locationSearch, navRe
                     </ul>
                   </section>
                 ))}
-                <NavFlyoutArtwork flyout={activeFlyout} />
+                <NavFlyoutArtwork flyout={activeFlyout} locationSearch={locationSearch} />
               </motion.div>
             </motion.div>
           ) : null}
@@ -277,7 +323,7 @@ function BlauGlobalNavigation({ isOpen, onToggle, onClose, locationSearch, navRe
 
         <div id="apple-mobile-menu" className="apple-global-nav__mobile-menu" aria-hidden={!isOpen}>
           <ul>
-            {PUBLIC_NAV_ITEMS.map((item) => (
+            {MOBILE_NAV_ITEMS.map((item) => (
               <li key={item.label}>
                 <PublicNavDestination
                   href={publicNavHref(item, locationSearch)}
@@ -289,7 +335,8 @@ function BlauGlobalNavigation({ isOpen, onToggle, onClose, locationSearch, navRe
             ))}
           </ul>
         </div>
-      </header>
+        </header>
+      </div>
 
       <AnimatePresence>
         {flyoutGroups ? (

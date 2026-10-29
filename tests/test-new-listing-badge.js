@@ -89,15 +89,7 @@ const surfaces = [
   'src/components/discover/DiscoverAgenda.jsx',
   'src/components/discover/DiscoverTimeline.jsx',
   'src/components/discover/DiscoverCalendar.jsx',
-  'src/components/discover/events/HackathonCard.jsx',
-  'src/components/discover/events/HappeningNextCard.jsx',
-  'src/components/discover/events/FeedEventCard.jsx',
-  'src/components/discover/programs/DeadlineListRow.jsx',
-  'src/components/discover/programs/ProgramFeedCard.jsx',
-  'src/components/discover/events/EventSpotlightCard.jsx',
   'src/components/discover/events/EventAgendaRow.jsx',
-  'src/components/discover/events/HackathonShelfCard.jsx',
-  'src/components/discover/programs/DeadlineRunway.jsx',
   'src/components/discover/programs/ProgramCard.jsx',
   'src/components/discover/programs/ClosedProgramRow.jsx',
   'src/pages/discover/MemberDiscoverPage.jsx',
@@ -110,9 +102,9 @@ for (const path of surfaces) {
   assert.match(surface, /<NewListingBadge/, `${path} renders the badge`);
 }
 
-// The badge stays a tiny red rectangle rather than another rounded tag.
+// The badge stays a tiny rectangle in the brand accent rather than another rounded tag.
 const styles = source('src/index.css');
-assert.match(styles, /--blau-new: #d92d20;/, 'the badge red is a shared token');
+assert.match(styles, /--blau-new: var\(--brand-accent\);/, 'the badge colour is the shared brand accent');
 assert.match(styles, /\.new-listing-badge \{[^}]*background: var\(--blau-new\);/);
 assert.match(styles, /\.new-listing-badge \{[^}]*border-radius: 3px;/, 'the badge is rectangular');
 

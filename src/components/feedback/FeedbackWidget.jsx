@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
-import {
-  ArrowUturnLeftIcon,
-  ChatBubbleLeftRightIcon,
-  CheckIcon,
-  PaperAirplaneIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { ChatBubbleLeftRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import {
   FEEDBACK_LIMITS,
@@ -16,7 +10,7 @@ import {
 } from '../../lib/feedback';
 import { requestModalOwnership } from '../../lib/modalCoordination';
 import { supabase } from '../../lib/supabase';
-import { GlassButton } from '../ui/glass-button';
+import '../../styles/feedback.css';
 
 const EMPTY_DRAFT = Object.freeze({
   name: '',
@@ -222,25 +216,19 @@ export default function FeedbackWidget({ isVisible = true }) {
         >
           <header className="feedback-widget__header">
             {isSent ? (
-              <div className="feedback-widget__sent" role="status">
-                <span className="feedback-widget__sent-badge" aria-hidden="true">
-                  <CheckIcon className="h-4 w-4" />
-                </span>
-                <div className="feedback-widget__sent-copy">
-                  <h2 className="feedback-widget__title" id={titleId}>Thanks, it&apos;s with us</h2>
-                  <p className="feedback-widget__description" id={descriptionId}>
-                    We may email you to learn a little more.
-                  </p>
-                  <button
-                    ref={sendAnotherRef}
-                    type="button"
-                    className="feedback-widget__again"
-                    onClick={handleSendAnother}
-                  >
-                    <ArrowUturnLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                    Send another thought
-                  </button>
-                </div>
+              <div role="status">
+                <h2 className="feedback-widget__title" id={titleId}>Thanks, it&apos;s with us</h2>
+                <p className="feedback-widget__description" id={descriptionId}>
+                  We may email you to learn a little more.
+                </p>
+                <button
+                  ref={sendAnotherRef}
+                  type="button"
+                  className="feedback-widget__again"
+                  onClick={handleSendAnother}
+                >
+                  Send another thought
+                </button>
               </div>
             ) : (
               <div>
@@ -250,29 +238,28 @@ export default function FeedbackWidget({ isVisible = true }) {
                 </p>
               </div>
             )}
-            <GlassButton
+            <button
               type="button"
               className="feedback-widget__close"
-              size="icon"
               onClick={() => closePanel({ restoreFocus: true })}
               aria-label="Close feedback form"
             >
-              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-            </GlassButton>
+              <XMarkIcon aria-hidden="true" />
+            </button>
           </header>
 
           {isSent ? null : (
             <form className="feedback-widget__form" onSubmit={handleSubmit} noValidate>
-              <div className="feedback-widget__contact-fields">
-                <div>
-                  <label className="label-form" htmlFor="feedback-name">Name</label>
+              <div className="feedback-widget__row">
+                <div className="feedback-widget__field">
+                  <label className="sr-only" htmlFor="feedback-name">Name</label>
                   <input
                     ref={nameRef}
                     id="feedback-name"
                     name="name"
                     type="text"
                     autoComplete="name"
-                    className="form-field"
+                    placeholder="Name"
                     value={draft.name}
                     maxLength={FEEDBACK_LIMITS.name}
                     onChange={updateField('name')}
@@ -282,8 +269,8 @@ export default function FeedbackWidget({ isVisible = true }) {
                   />
                   {errors.name ? <p className="feedback-widget__field-error" id="feedback-name-error">{errors.name}</p> : null}
                 </div>
-                <div>
-                  <label className="label-form" htmlFor="feedback-email">Email</label>
+                <div className="feedback-widget__field">
+                  <label className="sr-only" htmlFor="feedback-email">Email address</label>
                   <input
                     ref={emailRef}
                     id="feedback-email"
@@ -291,7 +278,7 @@ export default function FeedbackWidget({ isVisible = true }) {
                     type="email"
                     inputMode="email"
                     autoComplete="email"
-                    className="form-field"
+                    placeholder="Email address"
                     value={draft.email}
                     maxLength={FEEDBACK_LIMITS.email}
                     onChange={updateField('email')}
@@ -303,13 +290,12 @@ export default function FeedbackWidget({ isVisible = true }) {
                 </div>
               </div>
 
-              <div>
-                <label className="label-form" htmlFor="feedback-message">Feedback</label>
+              <div className="feedback-widget__field">
+                <label className="sr-only" htmlFor="feedback-message">Feedback</label>
                 <textarea
                   ref={feedbackRef}
                   id="feedback-message"
                   name="feedback"
-                  className="form-field feedback-widget__textarea"
                   placeholder="What should we improve?"
                   value={draft.feedback}
                   maxLength={FEEDBACK_LIMITS.feedback}
@@ -342,34 +328,31 @@ export default function FeedbackWidget({ isVisible = true }) {
                 </p>
               ) : null}
 
-              <GlassButton
+              <button
                 type="submit"
                 className="feedback-widget__submit"
-                contentClassName="feedback-widget__submit-content"
                 disabled={status === 'submitting'}
                 aria-busy={status === 'submitting'}
               >
-                <PaperAirplaneIcon className="h-4 w-4" aria-hidden="true" />
                 {status === 'submitting' ? 'Sending…' : 'Send feedback'}
-              </GlassButton>
+              </button>
             </form>
           )}
         </section>
       ) : null}
 
       <div className="feedback-widget__trigger-shell" ref={triggerShellRef}>
-        <GlassButton
+        <button
           ref={triggerRef}
           type="button"
           className="feedback-widget__trigger"
-          contentClassName="feedback-widget__trigger-content"
           onClick={handleOpen}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
         >
-          <ChatBubbleLeftRightIcon className="h-5 w-5" aria-hidden="true" />
+          <ChatBubbleLeftRightIcon aria-hidden="true" />
           <span>Feedback</span>
-        </GlassButton>
+        </button>
       </div>
     </div>
   );

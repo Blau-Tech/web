@@ -1,71 +1,323 @@
 /* Home page sections: "Find your next opportunity" and the community close. */
-.ho-paths,
+.ho-bento,
 .hp-close {
-  --ho-ink: var(--blau-text-primary, #0b0f19);
-  --ho-copy: var(--blau-text-secondary, #626770);
-  --ho-muted: var(--blau-text-muted, #8d929a);
-  --ho-accent: var(--blau-accent, #60a7ee);
-  --ho-accent-ink: var(--blau-accent-ink, #1e5fa6);
-  /* The shared Blau Tech mesh field (see .blau-backdrop__field). */
-  --ho-mesh:
-    radial-gradient(72% 64% at 10% 8%, rgba(96, 167, 238, 0.17) 0%, transparent 70%),
-    radial-gradient(64% 58% at 90% 86%, rgba(153, 202, 250, 0.3) 0%, transparent 72%),
-    radial-gradient(56% 52% at 60% 10%, rgba(255, 255, 255, 0.8) 0%, transparent 68%),
-    linear-gradient(160deg, #f8fbfe 0%, #eef4fb 55%, #e3ecf7 100%);
+  --ho-ink: var(--blau-text-primary, var(--brand-ground));
+  --ho-copy: var(--blau-text-secondary, color-mix(in srgb, var(--brand-ground) 64%, #fff));
+  --ho-muted: var(--blau-text-muted, color-mix(in srgb, var(--brand-ground) 48%, #fff));
+  --ho-accent: var(--blau-accent, var(--brand-accent));
+  --ho-accent-ink: var(--blau-accent-ink, var(--brand-deep));
 }
 
-.ho-paths {
+/* A viewport-sized bento on a 4 x 4 grid. The photos run corner to corner (two squares and two tall
+   tiles) and the link tiles are spread between them, with one navy tile and one mesh tile to break up the
+   grey. Every tile shares the same padding, radius and gap. The grid keeps a 5 : 4 shape so the tiles
+   stay near-square, and everything inside it scales with its width. */
+.ho-bento {
+  --ho-gap: clamp(0.5rem, 1.1vw, 0.9rem);
+  --ho-pad: clamp(0.9rem, 1.9cqw, 1.5rem);
+  --ho-radius: clamp(1rem, 2.4cqw, 1.7rem);
+  --ho-tile: color-mix(in srgb, var(--brand-ground) 4%, #fff);
+  --ho-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25'/%3E%3C/svg%3E");
+  container-type: inline-size;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: var(--home-header-gap, 2rem);
+  width: min(100%, calc(max(100svh - var(--public-nav-height, 0px), 36rem) * 1.25));
+  height: 100%;
+  margin-inline: auto;
+  padding: var(--ho-gap);
+  grid-template-areas:
+    "left    intro    events     photo-d"
+    "left    intro    hackathons photo-d"
+    "photo-c wide     wide       opportunities"
+    "photo-c chat     photo-b    news";
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: var(--ho-gap);
 }
 
-.ho-paths--2 { max-width: 58rem; margin-inline: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-.ho-path {
+.ho-tile--intro {
+  grid-area: intro;
   display: flex;
   min-width: 0;
+  align-items: flex-end;
+  padding: var(--ho-pad);
+  border-radius: var(--ho-radius);
+  background: var(--ho-tile);
+}
+
+.ho-bento .ho-tile--intro .section-heading__title { font-size: clamp(1.35rem, 3.2cqw, 2.5rem); }
+.ho-bento .ho-tile--intro .section-heading__description { margin-top: 0.6em; font-size: clamp(0.78rem, 1.3cqw, 1rem); line-height: 1.45; }
+
+.ho-card--events { grid-area: events; }
+.ho-card--hackathons { grid-area: hackathons; }
+.ho-card--opportunities { grid-area: opportunities; }
+.ho-path--programs { grid-area: wide; }
+/* The left column: a photo that takes whatever height the two flat tiles below it leave. */
+.ho-stack { grid-area: left; display: flex; min-width: 0; min-height: 0; flex-direction: column; gap: var(--ho-gap); }
+.ho-stack > .ho-photo { flex: 1 1 0; }
+.ho-stack > .ho-path,
+.ho-stack > .ho-links { flex: 0 0 auto; }
+.ho-path--community { grid-area: chat; }
+.ho-path--news { grid-area: news; }
+
+.ho-photo { position: relative; min-width: 0; min-height: 0; margin: 0; overflow: hidden; border-radius: var(--ho-radius); background: var(--ho-tile); }
+.ho-photo img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+/* An event's artwork is a link that fills its tile and slides like a photo. */
+.ho-photo__event { position: absolute; inset: 0; display: block; }
+.ho-photo__img--out { pointer-events: none; }
+/* A photo that turns over slides in from the left while the one on show slides out right. */
+.ho-photo__img--in,
+.ho-photo__img--out { animation: ho-swipe-in 800ms cubic-bezier(0.65, 0, 0.35, 1) both; }
+.ho-photo__img--out { animation-name: ho-swipe-out; }
+@keyframes ho-swipe-in { from { transform: translateX(-100%); } }
+@keyframes ho-swipe-out { to { transform: translateX(100%); } }
+
+/* The newsletter card: a tray of issues on the same grey as every tile. */
+.ho-card--news { grid-area: news; }
+.ho-card--news .ho-card__link { cursor: pointer; background: none; border: 0; font: inherit; }
+
+.ho-photo--b { grid-area: photo-b; }
+.ho-photo--c { grid-area: photo-c; }
+.ho-photo--d { grid-area: photo-d; }
+.ho-photo--wide { grid-area: wide; }
+
+/* Link tiles and figure cards: the title centred along the bottom; the round button trails the mouse. */
+.ho-path,
+.ho-card {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  border-radius: 1.25rem;
-  background: var(--ho-mesh);
+  border-radius: var(--ho-radius);
+  background: var(--ho-tile);
   color: var(--ho-ink);
+  font: inherit;
+  text-align: center;
   text-decoration: none;
 }
 
-.ho-path:focus-visible { outline: 3px solid rgba(96, 167, 238, 0.5); outline-offset: 3px; }
+/* At rest the tiles say they are links: a small arrow in the top right corner, and the tile warms up
+   under the mouse. */
+.ho-path,
+.ho-card { --ho-tile-hover: color-mix(in srgb, var(--brand-ground) 8%, #fff); position: relative; transition: background-color 200ms ease; }
 
-.ho-path__stage { position: relative; display: block; height: clamp(12rem, 26vh, 14.5rem); }
+.ho-path::after,
+.ho-card::after {
+  position: absolute;
+  top: var(--ho-pad);
+  right: var(--ho-pad);
+  z-index: 1;
+  width: clamp(0.95rem, 1.7cqw, 1.3rem);
+  height: clamp(0.95rem, 1.7cqw, 1.3rem);
+  background: var(--ho-muted);
+  opacity: 0.75;
+  pointer-events: none;
+  content: '';
+  -webkit-mask: var(--ho-arrow) center / contain no-repeat;
+  mask: var(--ho-arrow) center / contain no-repeat;
+  transition: background-color 200ms ease, opacity 160ms ease, transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ho-path:hover,
+.ho-card:hover,
+.ho-path:focus-visible { background-color: var(--ho-tile-hover); }
+.ho-card:hover { --hairline-plate: var(--ho-tile-hover); }
+
+.ho-path:focus-visible::after { background: var(--ho-ink); }
+
+/* With a mouse the cursor button takes over from the corner arrow, so a tile never shows two. */
+@media (hover: hover) and (pointer: fine) {
+  .ho-path:hover::after,
+  .ho-card:hover::after { opacity: 0; transform: translate(4px, -4px); }
+}
+
+/* The navy tile: the page's main call to action, in the same navy as the nav button. */
+.ho-path--submit {
+  --ho-tile-hover: color-mix(in srgb, var(--ho-ink) 86%, var(--brand-accent));
+  background-color: var(--ho-ink);
+  color: #fff;
+}
+
+.ho-path--submit::after { background: #fff; }
+.ho-path--submit:hover::after,
+.ho-path--submit:focus-visible::after { background: #fff; }
+.ho-path--submit .ho-tile__icon { background: rgba(255, 255, 255, 0.14); color: #fff; }
+
+.ho-path { cursor: pointer; }
+.ho-path:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand-accent) 50%, transparent); outline-offset: 3px; }
+
+.ho-path__stage { position: relative; display: block; min-height: 0; flex: 1 1 auto; }
+
+.ho-path--submit,
+.ho-path--community,
+.ho-path--news,
+.ho-links { justify-content: space-between; padding-top: var(--ho-pad); }
+
+/* The links tile: three round-cornered icon buttons where the other tiles carry one. */
+.ho-links {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--ho-radius);
+  background: var(--ho-tile);
+  color: var(--ho-ink);
+}
+
+/* The icons sit straight on the tile, with no plate behind them. */
+.ho-links__row { display: flex; align-items: center; gap: clamp(0.7rem, 1.4cqw, 1.1rem); margin-inline: var(--ho-pad); }
+.ho-links__link {
+  display: grid;
+  width: clamp(1.4rem, 2.4cqw, 1.9rem);
+  height: clamp(1.4rem, 2.4cqw, 1.9rem);
+  place-items: center;
+  color: var(--ho-copy);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.ho-links__link svg { width: 100%; height: 100%; }
+.ho-links__link:hover,
+.ho-links__link:focus-visible { color: var(--ho-ink); }
+.ho-links__link:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand-accent) 50%, transparent); outline-offset: 3px; border-radius: 0.3rem; }
+
+.ho-tile__icon {
+  display: grid;
+  width: clamp(2rem, 3.6cqw, 2.8rem);
+  height: clamp(2rem, 3.6cqw, 2.8rem);
+  margin-inline: var(--ho-pad);
+  place-items: center;
+  border-radius: 30%;
+  background: #fff;
+  color: var(--ho-accent-ink);
+}
+
+.ho-tile__icon svg { width: 48%; height: 48%; }
+
+/* The two tiles under the photo are flat: one row each, icon first, title in the middle. */
+.ho-stack > .ho-path,
+.ho-stack > .ho-links {
+  height: clamp(2.9rem, 5.2cqw, 4rem);
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  padding: 0 var(--ho-pad);
+}
+
+.ho-stack .ho-tile__icon { width: clamp(1.6rem, 2.8cqw, 2.2rem); height: clamp(1.6rem, 2.8cqw, 2.2rem); margin: 0; }
+.ho-stack .ho-links__row { margin: 0; }
+.ho-stack .ho-links .ho-path__body { justify-content: flex-start; padding: 0; }
+.ho-stack .ho-path__body { flex: 1 1 auto; align-items: center; padding: 0 1.4rem 0 0; }
+.ho-stack .ho-path__title { font-size: clamp(0.9rem, 1.6cqw, 1.25rem); }
+.ho-stack > .ho-path::after { top: 0; bottom: 0; margin-block: auto; }
+
+.ho-path__body { padding-bottom: calc(var(--ho-pad) * 0.7); }
 
 .ho-path__body {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0 clamp(1.5rem, 2.4vw, 2rem) clamp(1.5rem, 2.4vw, 1.9rem);
+  justify-content: center;
+  padding: 0 var(--ho-pad) var(--ho-pad);
 }
 
-.ho-path__copy { display: grid; min-width: 0; gap: 0.5rem; }
-.ho-path__title { font-family: var(--font-title); font-size: clamp(1.3rem, 1.6vw, 1.55rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1; }
-.ho-path__count { min-height: 1.35em; color: var(--ho-copy); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.ho-path__title { min-width: 0; font-family: var(--font-title); font-size: clamp(0.95rem, 1.9cqw, 1.5rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.05; text-align: center; }
 
-.ho-path__action {
-  display: grid;
-  width: 2.6rem;
-  height: 2.6rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid rgba(11, 15, 25, 0.14);
+/* A small blinking dot in the very top right corner says something new is inside. It sits past the tip of the
+   corner arrow, clear of its top edge, so the two never touch. It positions against the card, which is the
+   nearest positioned ancestor. */
+.ho-path__fresh {
+  position: absolute;
+  top: calc(var(--ho-pad) - 0.6rem);
+  right: calc(var(--ho-pad) - 0.6rem);
+  z-index: 2;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
-  color: var(--ho-ink);
-  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+  background: var(--brand-accent);
+  pointer-events: none;
+  animation: ho-fresh 1.6s ease-in-out infinite;
 }
 
-.ho-path__action svg { width: 1rem; height: 1rem; }
-.ho-path:hover .ho-path__action,
-.ho-path:focus-visible .ho-path__action { border-color: var(--ho-ink); background: var(--ho-ink); color: #fff; }
+@keyframes ho-fresh {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-accent) 55%, transparent); }
+  50% { opacity: 0.35; box-shadow: 0 0 0 0.3rem color-mix(in srgb, var(--brand-accent) 0%, transparent); }
+}
+
+/* The mouse-following button: the outer span travels, the inner dot pops in and out. */
+.ho-bento { position: relative; }
+
+.ho-follow {
+  --ho-follow-size: clamp(1.9rem, 3cqw, 2.4rem);
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ho-follow__dot {
+  position: absolute;
+  top: calc(var(--ho-follow-size) / -2);
+  left: calc(var(--ho-follow-size) / -2);
+  display: grid;
+  width: var(--ho-follow-size);
+  height: var(--ho-follow-size);
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ho-ink);
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 160ms ease, transform 260ms cubic-bezier(0.2, 0.9, 0.3, 1.2), background-color 180ms ease, color 180ms ease;
+}
+
+.ho-follow[data-tone="dark"] .ho-follow__dot { background: #fff; color: var(--ho-ink); }
+.ho-follow.is-shown .ho-follow__dot { opacity: 1; transform: none; }
+.ho-bento:active .ho-follow.is-shown .ho-follow__dot { transform: scale(0.92); }
+
+.ho-follow__dot svg { width: 45%; height: 45%; stroke-width: 2.2; }
+.ho-follow__out,
+.ho-follow[data-kind="external"] .ho-follow__arrow { display: none; }
+.ho-follow[data-kind="external"] .ho-follow__out { display: block; }
+
+/* Only a mouse gets the button, and it stands in for the arrow cursor over the tiles. */
+@media (hover: hover) and (pointer: fine) {
+  .ho-follow { display: block; }
+  .ho-bento [data-follow],
+  .ho-bento [data-follow] * { cursor: none; }
+}
+
+/* The square cards: a line figure above the title row, on the same grey as every tile. */
+.ho-card { --hairline-plate: var(--ho-tile); }
+
+.ho-card__figure { position: relative; min-height: 0; flex: 1 1 auto; cursor: pointer; }
+
+.ho-card__plate {
+  position: absolute;
+  top: 0;
+  bottom: 0.25rem;
+  left: 50%;
+  aspect-ratio: 5 / 4;
+  max-width: 100%;
+  transform: translateX(-50%);
+}
+
+.ho-card__plate > div { width: 100%; }
+.ho-card__frame { display: block; width: 100%; height: 100%; border: 0; background: transparent; }
+
+.ho-card__link { display: block; color: inherit; text-decoration: none; }
+.ho-card__link:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand-accent) 50%, transparent); outline-offset: -3px; border-radius: var(--ho-radius); }
+
+/* Programs sit in the wide tile: the runway above, the title centred beneath it. */
+.ho-path--programs .ho-runway__pin { --stem: 0.6rem; --thumb: 2.1rem; }
+.ho-path--programs .ho-runway__pin--lane-2 { --stem: calc(0.6rem + var(--thumb) + 0.9rem); }
+.ho-path--programs .ho-runway__track { top: 58%; right: var(--ho-pad); left: var(--ho-pad); }
 
 .ho-art { position: absolute; inset: 0; }
 
@@ -90,11 +342,11 @@
 
 .ho-week__stack { display: flex; width: 100%; min-height: 0; flex-direction: column-reverse; gap: 0.3rem; overflow: hidden; }
 
-.ho-week__thumb { display: block; overflow: hidden; flex: 0 0 auto; aspect-ratio: 1; border-radius: 0.55rem; background: rgba(30, 95, 166, 0.08); transition: opacity 300ms ease; }
+.ho-week__thumb { display: block; overflow: hidden; flex: 0 0 auto; aspect-ratio: 1; border-radius: 0.55rem; background: color-mix(in srgb, var(--brand-deep) 8%, transparent); transition: opacity 300ms ease; }
 .ho-week__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .ho-week.is-playing .ho-week__day:not(.is-active) .ho-week__thumb { opacity: 0.55; }
 
-.ho-week__empty { width: 38%; height: 2px; margin: 0 auto 0.35rem; border-radius: 2px; background: rgba(30, 95, 166, 0.2); }
+.ho-week__empty { width: 38%; height: 2px; margin: 0 auto 0.35rem; border-radius: 2px; background: color-mix(in srgb, var(--brand-deep) 20%, transparent); }
 .ho-week__more { color: var(--ho-copy); font-size: 0.66rem; font-variant-numeric: tabular-nums; font-weight: 650; text-align: center; }
 
 .ho-week__weekday { margin-top: 0.7rem; color: var(--ho-muted); font-size: 0.66rem; font-weight: 600; white-space: nowrap; transition: color 300ms ease; }
@@ -112,15 +364,14 @@
 /* Hackathons: a deck of the next ones. */
 .ho-deck__card {
   position: absolute;
-  top: 54%;
+  top: 50%;
   left: 50%;
   width: min(60%, 14.5rem);
   overflow: hidden;
-  border: 1px solid rgba(11, 15, 25, 0.08);
+  border: 1px solid color-mix(in srgb, var(--brand-ground) 8%, transparent);
   border-radius: 1.1rem;
   background: #fff;
   transform-origin: 50% 100%;
-  translate: -50% -50%;
   will-change: transform;
 }
 
@@ -133,7 +384,7 @@
 /* Programs: the nearest deadlines on a line that starts today. */
 .ho-runway__track { position: absolute; top: 62%; right: clamp(1.75rem, 3vw, 2.4rem); left: clamp(1.75rem, 3vw, 2.4rem); height: 0; }
 
-.ho-runway__line { position: absolute; top: 0; right: 0; left: 0; height: 1px; background: rgba(30, 95, 166, 0.24); }
+.ho-runway__line { position: absolute; top: 0; right: 0; left: 0; height: 1px; background: color-mix(in srgb, var(--brand-deep) 24%, transparent); }
 .ho-runway__line::before { position: absolute; top: -3.5px; left: -3.5px; width: 8px; height: 8px; border-radius: 50%; background: var(--ho-accent-ink); content: ''; }
 
 .ho-runway__signal { position: absolute; top: -1px; right: 0; left: 0; height: 3px; overflow: hidden; }
@@ -141,7 +392,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent 72%, rgba(96, 167, 238, 0.55) 94%, var(--ho-accent-ink) 100%);
+  background: linear-gradient(90deg, transparent 72%, color-mix(in srgb, var(--brand-accent) 55%, transparent) 94%, var(--ho-accent-ink) 100%);
   animation: ho-signal 5s linear infinite paused;
   will-change: transform;
 }
@@ -157,7 +408,7 @@
 .ho-runway__pin { --stem: 0.9rem; --thumb: 2.7rem; position: absolute; top: 0; left: calc(var(--x) * 1%); width: 0; }
 .ho-runway__pin--lane-2 { --stem: calc(0.9rem + var(--thumb) + 1.3rem); }
 
-.ho-runway__pin::before { position: absolute; left: -0.5px; width: 1px; height: var(--stem); background: rgba(30, 95, 166, 0.3); content: ''; }
+.ho-runway__pin::before { position: absolute; left: -0.5px; width: 1px; height: var(--stem); background: color-mix(in srgb, var(--brand-deep) 30%, transparent); content: ''; }
 .ho-runway__pin--lane-0::before,
 .ho-runway__pin--lane-2::before { bottom: 0; }
 .ho-runway__pin--lane-1::before { top: 0; }
@@ -205,20 +456,46 @@
 }
 
 @media (max-width: 900px) {
-  .ho-paths,
-  .ho-paths--2 { grid-template-columns: minmax(0, 1fr); max-width: 34rem; margin-inline: auto; }
-  .ho-path__stage { height: 12.5rem; }
+  .ho-bento {
+    --ho-radius: 1.25rem;
+    width: 100%;
+    height: auto;
+    grid-template-areas:
+      "intro         intro"
+      "events        hackathons"
+      "opportunities left"
+      "wide          wide"
+      "chat          news"
+      "photo-c       photo-d"
+      "photo-b       photo-b";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: minmax(9rem, auto);
+  }
+
+  .ho-card { min-height: 11rem; }
+  .ho-stack { min-height: 17rem; }
+  .ho-stack > .ho-path,
+  .ho-stack > .ho-links { height: 3.25rem; }
+  .ho-stack .ho-path--submit .ho-tile__icon { display: none; }
+  .ho-photo { min-height: 9rem; }
+  .ho-photo--wide { min-height: 12rem; }
+  .ho-path__title { font-size: 1.1rem; }
+  .ho-bento .ho-tile--intro .section-heading__title { font-size: 1.75rem; }
+  .ho-bento .ho-tile--intro .section-heading__description { font-size: 0.95rem; }
+  .ho-path--programs .ho-runway__pin { --stem: 0.9rem; --thumb: 2.2rem; }
+  .ho-path--programs .ho-runway__pin--lane-2 { --stem: calc(0.9rem + var(--thumb) + 1.3rem); }
+  .ho-path--programs .ho-runway__track { top: 62%; right: var(--ho-pad); left: var(--ho-pad); }
+  .ho-path--programs .ho-path__stage { flex: 0 0 auto; height: 11rem; }
 }
 
 @media (max-width: 600px) {
-  .ho-path { border-radius: 1rem; }
-  .ho-path__title { font-size: 1.35rem; }
   .ho-runway__pin { --thumb: 2.2rem; }
   .ho-deck__card { width: min(60%, 12.5rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ho-path__action,
+  .ho-follow__dot,
   .ho-week__thumb,
   .ho-week__weekday { transition: none; }
 
@@ -230,13 +507,48 @@
   .ho-runway:not(.is-in) .ho-runway__pin { opacity: 1; }
 
   .ho-runway__signal { display: none; }
+
+  .ho-path__fresh { animation: none; }
 }
 
 /* Closing section: the community in numbers, the latest additions, one way in. */
-.hp-close { padding: var(--home-band-pad, 4rem) 0; overflow: hidden; background: transparent; color: var(--ho-ink); text-align: center; }
+/* A wide, slender Navy panel inset in the white sheet. It runs wider than the text container
+   (.section-container) so it reads as a band, with tight padding to keep it low. */
+.hp-close {
+  --hp-close-gutter: 1rem;
+  --ho-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25'/%3E%3C/svg%3E");
+  --home-header-gap: 1.35rem;
+  width: min(100% - 2 * var(--hp-close-gutter), 92rem);
+  margin: clamp(3rem, 9vh, 6.5rem) auto;
+  padding: clamp(1.75rem, 3.6vh, 2.5rem) 0;
+  border-radius: clamp(1.25rem, 2.2vw, 1.75rem);
+  overflow: hidden;
+  background: var(--brand-ground);
+  color: var(--ho-ink);
+  text-align: center;
+}
+
+/* On Navy: white text, Lite for the link, and the brand chalk highlight inverted (the ground and the
+   text swap: a white stroke with Navy words). The listing cards stay white with dark text. */
+.hp-close {
+  --ho-ink: #fff;
+  --ho-copy: color-mix(in srgb, #fff 72%, transparent);
+  --ho-muted: color-mix(in srgb, #fff 56%, transparent);
+  --ho-accent-ink: var(--brand-accent-lite);
+  --highlight-bg: #fff;
+  --highlight-ink: var(--brand-ground);
+}
+.hp-close .glass-button {
+  background: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.hp-close .glass-button-text { color: var(--brand-ink); }
+@media (min-width: 640px) { .hp-close { --hp-close-gutter: 1.5rem; } }
+@media (min-width: 1024px) { .hp-close { --hp-close-gutter: 2rem; } }
 
 .hp-close__title { margin: 0; font-family: var(--font-title); font-size: var(--section-heading-title-size); font-weight: 500; letter-spacing: -0.045em; line-height: 1.02; }
-.hp-close__title span { display: block; color: var(--ho-accent-ink); }
+.hp-close__title > span { display: block; margin-top: 0.18em; }
 .hp-close__description { max-width: 40rem; margin: 0.9rem auto 0; color: var(--ho-copy); font-size: clamp(0.95rem, 1.1vw, 1.05rem); line-height: 1.55; }
 
 .hp-close__stats {
@@ -256,8 +568,8 @@
 .hp-recent {
   margin-top: var(--home-header-gap, 2rem);
   overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
   text-align: left;
 }
 
@@ -277,26 +589,67 @@
 /* Two identical halves, so moving by half the track (plus half a gap) loops seamlessly. */
 @keyframes hp-recent-drift { to { transform: translateX(calc(-50% - 0.5rem)); } }
 
+/* A listing: a white text tile, what it is and when above its name. The tile warms to Wash under the mouse and a corner arrow says it is a link, as on the home tiles. */
 .hp-recent__card {
+  --hp-card-ink: var(--brand-ground);
+  --hp-card-copy: var(--brand-secondary);
+  position: relative;
   display: flex;
-  width: clamp(13rem, 17vw, 15.5rem);
+  width: clamp(13rem, 16vw, 15.5rem);
   flex: 0 0 auto;
   flex-direction: column;
-  overflow: hidden;
-  border: 1px solid rgba(11, 15, 25, 0.08);
-  border-radius: 1.1rem;
+  min-height: 10rem;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
   background: #fff;
-  color: var(--ho-ink);
+  color: var(--hp-card-ink);
   text-decoration: none;
+  transition: background-color 200ms ease;
 }
 
-.hp-recent__card:focus-visible { outline: 3px solid rgba(96, 167, 238, 0.5); outline-offset: 2px; }
-.hp-recent__image { display: block; overflow: hidden; aspect-ratio: 1200 / 630; background: var(--blau-panel, #edf1f6); }
-.hp-recent__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.hp-recent__body { display: grid; gap: 0.25rem; padding: 0.7rem 0.9rem 0.85rem; }
-.hp-recent__body small { display: flex; align-items: center; color: var(--ho-muted); font-size: 0.68rem; font-weight: 600; }
-.hp-recent__body strong { display: -webkit-box; overflow: hidden; min-height: 2.6em; font-size: 0.82rem; font-weight: 600; line-height: 1.3; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-.hp-recent__card:hover strong { color: var(--ho-accent-ink); }
+.hp-recent__card:hover { background: var(--brand-wash); }
+.hp-recent__card:focus-visible { outline: 2px solid var(--brand-accent-lite); outline-offset: 2px; }
+
+.hp-recent__card::after {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  width: 1rem;
+  height: 1rem;
+  background: var(--hp-card-copy);
+  content: '';
+  -webkit-mask: var(--ho-arrow) center / contain no-repeat;
+  mask: var(--ho-arrow) center / contain no-repeat;
+}
+
+.hp-recent__body { display: grid; flex: 1 1 auto; align-content: space-between; gap: 1.5rem; padding-right: 1.75rem; }
+
+.hp-recent__body small {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.4rem;
+  color: var(--hp-card-copy);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+/* What it is, in the brand's deep blue; the date beside it in the quieter grey. */
+.hp-recent__type { color: var(--brand-deep); font-weight: 600; }
+
+.hp-recent__body strong {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 2.5em;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 
 .hp-close__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem 2rem; margin-top: var(--home-header-gap, 2rem); }
 

@@ -130,6 +130,23 @@ export function selectSpotlight(items, now = new Date()) {
   return ranked.slice(0, 3);
 }
 
+/** The one event to feature for the next seven days: highlights first, then ones with artwork. */
+export function eventOfTheWeek(items, now = new Date()) {
+  const today = startOfDay(now).getTime();
+  const windowEnd = today + 7 * DAY_MS;
+  const candidates = items.filter((item) => {
+    if (!eventDate(item)) return false;
+    const day = agendaDay(item, now).getTime();
+    return day >= today && day < windowEnd;
+  });
+
+  return [...candidates].sort((first, second) => (
+    Number(Boolean(second.isHighlight)) - Number(Boolean(first.isHighlight))
+    || Number(Boolean(second.imageUrl)) - Number(Boolean(first.imageUrl))
+    || compareByDateAndTime(first, second)
+  ))[0] || null;
+}
+
 export function relativeDayLabel(date, now = new Date()) {
   const difference = Math.round((startOfDay(date) - startOfDay(now)) / DAY_MS);
   if (difference === 0) return 'Today';

@@ -10,7 +10,6 @@ const cityContextSource = source('src/lib/city/cityContext.jsx');
 const discoverPageSource = source('src/pages/discover/MemberDiscoverPage.jsx');
 const eventPageSource = source('src/pages/discover/EventShowcasePage.jsx');
 const programPageSource = source('src/pages/discover/ProgramShowcasePage.jsx');
-const programTypeTilesSource = source('src/components/discover/programs/ProgramTypeTiles.jsx');
 const detailPageSource = source('src/pages/discover/OpportunityDetailPage.jsx');
 const studentsLayoutSource = source('src/components/layout/StudentsLayout.jsx');
 
@@ -45,8 +44,8 @@ assert.match(programPageSource, /fetchDiscoveryItems\(supabase, \{/);
 assert.match(programPageSource, /cities: selectedDiscoveryCityCodes/);
 assert.doesNotMatch(programPageSource, /SAMPLE_PROGRAMS|samplePrograms/,
   'an empty approved catalogue must not show sample programs with fabricated application dates');
-assert.doesNotMatch(programTypeTilesSource, /\{type\.count\}\s+open/,
-  'type totals include upcoming and unknown applications and must not label them open');
+assert.doesNotMatch(programPageSource, /program[^`'"]*\}\s+open\b/,
+  'program totals include upcoming and unknown applications and must not label them open');
 assert.doesNotMatch(detailPageSource, /findSampleProgram|samplePrograms/,
   'direct program links must also load a published database row');
 assert.doesNotMatch(eventPageSource, /<PopUp/);
@@ -60,7 +59,7 @@ assert.match(detailPageSource, /EducationalOccupationalProgram/);
 assert.match(detailPageSource, /'@type': 'Event'/);
 assert.match(detailPageSource, /application\/ld\+json/);
 assert.match(detailPageSource, /link\[rel="canonical"\]/);
-assert.match(detailPageSource, /View original listing/);
+assert.match(source('src/components/opportunity-detail/OpportunityHero.jsx'), /View original listing/);
 assert.match(studentsLayoutSource, /<MobileNavbar \/>/);
 assert.doesNotMatch(studentsLayoutSource, /navItems/);
 

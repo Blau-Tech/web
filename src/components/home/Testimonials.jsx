@@ -10,6 +10,7 @@ const testimonials = [
     column: 0,
     featured: true,
     image: '/assets/testimonials/flamur.png',
+    linkedin: 'https://www.linkedin.com/in/flamur-maliqi/',
   },
   {
     text: 'I have been on a hackathon team with Troy. The Blau Tech team is seriously talented, and I am excited to see what they build.',
@@ -28,6 +29,7 @@ const testimonials = [
     name: 'Kenny Nguyen',
     role: 'Founder',
     column: 1,
+    linkedin: 'https://www.linkedin.com/in/kennynguye/',
   },
   {
     text: 'I found a fellowship that matched exactly what I wanted to work on. I would never have known it was open otherwise.',
@@ -40,6 +42,7 @@ const testimonials = [
     name: 'Ino',
     role: 'TUM.ai',
     column: 1,
+    linkedin: 'https://www.linkedin.com/in/inoussa-adouba/',
   },
   {
     text: 'It feels curated rather than crowded. I can quickly spot the events and programs that are actually relevant to me.',
@@ -54,6 +57,7 @@ const testimonials = [
     column: 2,
     featured: true,
     image: '/assets/testimonials/troy.jpg',
+    linkedin: 'https://www.linkedin.com/in/troyriveravolk/',
   },
   {
     text: 'The weekly roundup keeps me connected without making me search five different places. I always find one event worth showing up for.',
@@ -66,6 +70,11 @@ const testimonials = [
     name: 'Melinda',
     role: 'n8n',
     column: 3,
+    company: {
+      name: 'n8n',
+      href: 'https://n8n.io/',
+      logo: '/assets/testimonials/n8n-mark.svg',
+    },
   },
   {
     text: 'Blau Tech gave me a clear view of the local ecosystem when I was changing careers and did not know where to start.',
@@ -124,8 +133,8 @@ const Testimonials = () => {
         >
           <SectionHeading
             titleId="testimonials-title"
-            title="What our community says"
-            description="Stories from people finding their place in tech."
+            title={<>Words from our{' '}<span className="brand-highlight">community</span></>}
+            description="Real Blau Tech members, in their own words."
             align="center"
           />
         </motion.div>

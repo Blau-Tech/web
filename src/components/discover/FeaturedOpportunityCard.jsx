@@ -3,7 +3,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 import NewListingBadge from '../common/NewListingBadge';
 import { parseDate } from '../../lib/discovery/discover';
-import { houseImage, opportunityImage } from '../../lib/discovery/opportunityImage';
+import { opportunityImage } from '../../lib/discovery/opportunityImage';
 import { Link } from '../../lib/router';
 
 function formatCompactDate(value) {
@@ -24,33 +24,38 @@ function opportunityLocation(item) {
 
 export function OpportunityArtwork({ item, eager = false }) {
   // Track the URL that failed rather than a boolean, so recycling this card for
-  // a different item re-tries that item's own image instead of staying fallen back.
+  // a different item re-tries that item's own image instead of staying empty.
   const [failedUrl, setFailedUrl] = useState(null);
-  const preferred = opportunityImage(item);
-  const source = preferred === failedUrl ? houseImage(item.category || item.tag) : preferred;
+  const source = opportunityImage(item);
+  const hasImage = Boolean(source) && source !== failedUrl;
 
   // Two layers of the same image (one request, the browser caches it): a blurred
   // bed that keeps overlaid copy readable, and the sharp image on top. Layouts
   // that want the blur reveal it and mask the sharp layer; by default it is hidden.
+  // Without an image the frame stays empty.
   return (
     <span className="event-showcase-artwork" aria-hidden="true">
-      <img
-        className="event-showcase-artwork-layer event-showcase-artwork-layer--blur"
-        src={source}
-        alt=""
-        loading={eager ? 'eager' : 'lazy'}
-        decoding="async"
-        referrerPolicy="no-referrer"
-      />
-      <img
-        className="event-showcase-artwork-layer event-showcase-artwork-layer--sharp"
-        src={source}
-        alt=""
-        loading={eager ? 'eager' : 'lazy'}
-        decoding="async"
-        referrerPolicy="no-referrer"
-        onError={() => setFailedUrl(preferred)}
-      />
+      {hasImage ? (
+        <>
+          <img
+            className="event-showcase-artwork-layer event-showcase-artwork-layer--blur"
+            src={source}
+            alt=""
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            referrerPolicy="no-referrer"
+          />
+          <img
+            className="event-showcase-artwork-layer event-showcase-artwork-layer--sharp"
+            src={source}
+            alt=""
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            referrerPolicy="no-referrer"
+            onError={() => setFailedUrl(source)}
+          />
+        </>
+      ) : null}
     </span>
   );
 }

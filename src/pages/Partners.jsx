@@ -10,7 +10,6 @@ import ChannelFlow from '../components/partners/ChannelFlow';
 import ListingWall from '../components/partners/ListingWall';
 import PartnerPathArt from '../components/partners/PartnerPathArt';
 import useLoopWhileVisible from '../components/partners/useLoopWhileVisible';
-import { GlassLink } from '../components/ui/glass-button';
 import { GlassMaterial } from '../components/ui/glass-material';
 import { fetchPartnerShowcase } from '../lib/partners/partnerShowcase';
 import { supabase } from '../lib/supabase';
@@ -445,15 +444,17 @@ function Partners() {
         <section id="partner-with-us" className="bp-cta" aria-labelledby="cta-title">
           <div className="bp-shell">
             <div className="bp-cta__panel bp-reveal">
-              <div className="bp-cta__copy">
-                <h2 id="cta-title" className="bp-cta__title">Your event, next.</h2>
-                <p className="bp-cta__description">One link is all we need to list it.</p>
-              </div>
-              <div className="bp-cta__actions">
-                <GlassLink href="#submit-event" contentClassName="bp-cta__glass-label">
-                  Submit an event <ArrowRightIcon aria-hidden="true" />
-                </GlassLink>
-                <a className="bp-cta__link" href={partnerMailto('Working with Blau Tech')}>Talk to our team</a>
+              <span className="brand-pattern brand-pattern--full bp-cta__pattern" aria-hidden="true" />
+              <div className="bp-cta__content">
+                <div className="bp-cta__copy">
+                  <h2 id="cta-title" className="bp-cta__title">Your event, next.</h2>
+                  <p className="bp-cta__description">One link is all we need to list it.</p>
+                </div>
+                <div className="bp-cta__actions">
+                  <a className="bp-cta__button" href="#submit-event">
+                    Submit an event <ArrowRightIcon aria-hidden="true" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

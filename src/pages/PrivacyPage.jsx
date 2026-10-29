@@ -13,7 +13,7 @@ const lastUpdated = new Date(`${PRIVACY_NOTICE_VERSION}T00:00:00Z`).toLocaleDate
 function Section({ id, title, children }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <h2 className="mt-12 text-lg font-semibold tracking-[-0.01em] text-[#0b0f19]">{title}</h2>
+      <h2 className="mt-12 text-lg font-semibold tracking-[-0.01em] text-brand-ink">{title}</h2>
       <div className="mt-3 space-y-4">{children}</div>
     </section>
   );
@@ -22,7 +22,7 @@ function Section({ id, title, children }) {
 function Item({ id, title, children }) {
   return (
     <p id={id} className="scroll-mt-24">
-      <strong className="font-semibold text-[#0b0f19]">{title}.</strong> {children}
+      <strong className="font-semibold text-brand-ink">{title}.</strong> {children}
     </p>
   );
 }
@@ -32,7 +32,7 @@ function MailLink({ subject, children }) {
   const href = subject ? `mailto:${email}?subject=${encodeURIComponent(subject)}` : `mailto:${email}`;
 
   return (
-    <a className="whitespace-nowrap text-[#0b0f19] underline underline-offset-4" href={href}>
+    <a className="whitespace-nowrap text-brand-ink underline underline-offset-4" href={href}>
       {children ?? email}
     </a>
   );
@@ -40,14 +40,14 @@ function MailLink({ subject, children }) {
 
 export default function PrivacyPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-[#0b0f19]">
+    <div className="flex min-h-screen flex-col bg-white text-brand-ink">
       <MobileNavbar />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-24 pt-12 sm:px-6 sm:pt-20">
         <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Privacy policy</h1>
-        <p className="mt-3 text-sm text-[#626770]">Last updated {lastUpdated}</p>
+        <p className="mt-3 text-sm text-brand-secondary">Last updated {lastUpdated}</p>
 
-        <div className="mt-10 space-y-4 text-[15px] leading-7 text-[#3f444d]">
+        <div className="mt-10 space-y-4 text-[15px] leading-7 text-brand-ink/80">
           <p>
             You can use Blau Tech without an account: there are no user accounts or sign-in. We only receive
             personal data when you choose to send it to us, and we don&apos;t use analytics, advertising or
@@ -70,7 +70,7 @@ export default function PrivacyPage() {
             {NEWSLETTER_ENABLED && (
               <Item id="newsletter" title="Newsletter">
                 If you subscribe, we store your email address and a record of your consent. You only receive
-                BlauTech Weekly after confirming by email (Art. 6(1)(a) GDPR). Every issue has an unsubscribe
+                the newsletter after confirming by email (Art. 6(1)(a) GDPR). Every issue has an unsubscribe
                 link, and you can withdraw consent at any time. We keep a minimal suppression record after an
                 unsubscribe, bounce or complaint under our legitimate interest in preventing another send
                 (Art. 6(1)(f) GDPR). You can object to that retention.

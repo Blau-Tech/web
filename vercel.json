@@ -2,6 +2,15 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "tdm-reservation", "value": "1" },
+        { "key": "tdm-policy", "value": "https://www.blau-tech.de/terms" }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

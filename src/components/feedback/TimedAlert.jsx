@@ -17,18 +17,19 @@ const MODAL_RETRY_DELAY_MS = 5000;
 
 export default function TimedAlert() {
   const { pathname } = useLocation();
-  const { city, enabledSections, isGeneric } = useCity();
+  const { city, enabledSections } = useCity();
   const isCompact = city.communityAlertDensity === 'compact';
   const isNewsletterPage = pathname === NEWSLETTER_PATH;
   const programsEnabled = hasPrograms(enabledSections);
   const [isVisible, setIsVisible] = useState(false);
   const [suppressExit, setSuppressExit] = useState(false);
-  const primaryChannelClass = isCompact
-    ? 'btn-primary btn-sm px-4 text-sm'
-    : 'btn-primary min-h-14 px-4 text-sm';
-  const secondaryChannelClass = isCompact
-    ? 'btn-secondary btn-sm whitespace-nowrap !px-3 !text-[13px]'
-    : 'btn-secondary min-h-12 px-4 text-sm';
+  const channelBase = 'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent-lite';
+  const primaryChannelClass = `${channelBase} bg-white text-brand-ground hover:bg-brand-wash ${
+    isCompact ? 'min-h-10 px-4 text-sm' : 'min-h-14 px-4 text-sm'
+  }`;
+  const secondaryChannelClass = `${channelBase} bg-white/10 text-white hover:bg-white/15 ${
+    isCompact ? 'min-h-10 whitespace-nowrap px-3 text-[13px]' : 'min-h-12 px-4 text-sm'
+  }`;
 
   useEffect(() => {
     if (isNewsletterPage) {
@@ -82,7 +83,7 @@ export default function TimedAlert() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={handleDismiss}
-            className="fixed inset-0 z-40 bg-[#0b0f19]/20 backdrop-blur-[2px] lg:hidden"
+            className="fixed inset-0 z-40 bg-brand-ink/20 backdrop-blur-[2px] lg:hidden"
           />
 
           <motion.div
@@ -98,43 +99,36 @@ export default function TimedAlert() {
             aria-describedby="community-alert-description"
           >
             <div className={isCompact ? 'w-full max-w-[23rem]' : 'w-full max-w-md lg:w-[28rem]'}>
-              <div className={`relative max-h-[calc(100svh-2rem)] overflow-y-auto rounded-[1.625rem] bg-white shadow-[0_28px_60px_rgba(11,15,25,0.12)] ${
+              <div className={`relative max-h-[calc(100svh-2rem)] overflow-x-hidden overflow-y-auto rounded-[1.625rem] bg-brand-ground font-brand text-white ${
                 isCompact ? 'p-4 sm:p-5' : 'p-5 sm:p-6'
               }`}>
-                <div className="relative">
-                  <div className={`${isCompact ? 'mb-3' : 'mb-4'} flex items-start justify-between gap-3`}>
-                    <div className="min-w-0">
-                      <p className={`label-form blau-text-accent inline-flex items-center gap-2 ${
-                        isCompact
-                          ? 'mb-2 !text-[10px] !tracking-[0.3em]'
-                          : 'mb-3 text-xs'
-                      }`}>
-                        <span className="h-2 w-2 rounded-full bg-[#60a7ee]" />
-                        {isGeneric ? 'Blau Tech' : `Blau Tech · ${city.name}`}
-                      </p>
-                      <h3
-                        id="community-alert-title"
-                        className={isCompact ? 'heading-3 !text-2xl !leading-tight' : 'heading-3'}
-                      >
-                        Never miss what&apos;s happening.
-                      </h3>
-                    </div>
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-36 overflow-hidden" aria-hidden="true">
+                  <div className="brand-pattern brand-pattern--full opacity-90" style={{ '--pattern-blur': '22px' }} />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-ground/40 to-brand-ground" />
+                </div>
 
-                    <button
-                      type="button"
-                      onClick={handleDismiss}
-                      className={isCompact
-                        ? 'btn-secondary btn-icon !h-9 !min-h-9 !w-9 !shrink-0 !p-0'
-                        : 'btn-secondary btn-icon shrink-0'}
-                      aria-label="Close community updates"
-                    >
-                      <XMarkIcon className={isCompact ? 'h-4 w-4' : 'h-5 w-5'} />
-                    </button>
-                  </div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={handleDismiss}
+                    className="absolute -right-1 -top-1 flex h-9 w-9 items-center justify-center text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent-lite"
+                    aria-label="Close community updates"
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </button>
+
+                  <h3
+                    id="community-alert-title"
+                    className={`pr-10 font-medium tracking-[-0.02em] text-white ${
+                      isCompact ? 'mb-2 pt-10 text-2xl leading-[1.15]' : 'mb-3 pt-14 text-[1.75rem] leading-[1.1]'
+                    }`}
+                  >
+                    Never miss <span className="text-brand-accent-lite">what&apos;s happening.</span>
+                  </h3>
 
                   <p
                     id="community-alert-description"
-                    className={isCompact ? 'body-subtle mb-4 !text-sm' : 'body-subtle mb-5'}
+                    className={`text-white/70 ${isCompact ? 'mb-4 text-sm leading-snug' : 'mb-5 text-base leading-snug'}`}
                   >
                     Fresh {programsEnabled ? 'events, hackathons, and programs' : 'events and hackathons'} from the Blau Tech community, straight to your favorite channel.
                   </p>

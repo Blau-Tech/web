@@ -1,0 +1,20 @@
+/* The pinned nav over a dark hero. Pages that open with a hero (the browse pages and a listing's own page)
+   keep the bar clear so the picture runs on up behind it, the way the home page does. Once the page moves
+   it becomes the white bar, and an open menu or flyout is always white. A page without a hero (not found,
+   an error) keeps the white bar from the start, since white text would not show on it. */
+.students-layout--flush:has(.ds-hero, .opportunity-detail__hero) .apple-global-nav:not(.apple-global-nav--scrolled):not(.apple-global-nav--flyout-open):not(.apple-global-nav--open) {
+  background: transparent;
+  color: rgb(255 255 255 / 0.88);
+  transition: background-color 250ms ease, color 250ms ease;
+}
+
+.students-layout--flush:has(.ds-hero, .opportunity-detail__hero) .apple-global-nav:not(.apple-global-nav--scrolled):not(.apple-global-nav--flyout-open):not(.apple-global-nav--open) :is(.apple-global-nav__brand a, a:hover, button:hover) {
+  color: #fff;
+}
+
+/* The Submit button flips to a white pill, as on the home page. */
+.students-layout--flush:has(.ds-hero, .opportunity-detail__hero) .apple-global-nav:not(.apple-global-nav--scrolled):not(.apple-global-nav--flyout-open):not(.apple-global-nav--open) .apple-global-nav__link-item--primary a {
+  border-color: #fff;
+  background: #fff;
+  color: var(--brand-ground);
+}

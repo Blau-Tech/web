@@ -13,6 +13,7 @@ import NewsletterModal from './components/newsletter/NewsletterModal';
 const Home = lazy(() => import('./pages/Home'));
 const Partners = lazy(() => import('./pages/Partners'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
 const StudentsLayout = lazy(() => import('./components/layout/StudentsLayout'));
 const MemberDiscoverPage = lazy(() => import('./pages/discover/MemberDiscoverPage'));
 const EventShowcasePage = lazy(() => import('./pages/discover/EventShowcasePage'));
@@ -58,6 +59,7 @@ function CityApp() {
             {/* Confirmation emails link to /newsletter#token=…; NewsletterModal reads it before this redirect. */}
             <Route path="/newsletter"><Navigate to="/" replace /></Route>
             <Route path="/privacy"><PrivacyPage /></Route>
+            <Route path="/terms"><TermsPage /></Route>
             <Route path="/onboarding"><Navigate to="/" replace /></Route>
 
             {/* Scholarships were retired; keep old links landing on programs. */}
@@ -104,7 +106,7 @@ function CityApp() {
               </StudentsLayout>
             </Route>
             <Route path="/discover/events">
-              <StudentsLayout allowPageScroll minimal>
+              <StudentsLayout allowPageScroll flush minimal>
                 <RequireOpportunityType type="events">
                   <EventShowcasePage />
                 </RequireOpportunityType>

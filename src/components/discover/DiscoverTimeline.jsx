@@ -80,8 +80,6 @@ function TimelineCard({ item, onClick, renderItemAction }) {
     <article className="discover-timeline-card">
       <DiscoverArtwork
         imageUrl={item.imageUrl}
-        category={item.category}
-        label={tag}
         fallbackClassName="discover-agenda-fallback"
       />
       <span className="discover-timeline-image-wash pointer-events-none" aria-hidden />

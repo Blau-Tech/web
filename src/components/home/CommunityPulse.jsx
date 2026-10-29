@@ -10,7 +10,6 @@ import { NEWSLETTER_ENABLED, openNewsletter } from '../../lib/newsletter';
 import { Link, useLocation } from '../../lib/router';
 import { supabase } from '../../lib/supabase';
 import NewListingBadge from '../common/NewListingBadge';
-import ListingThumb from '../discover/showcase/ListingThumb';
 import useInViewOnce from '../discover/showcase/useInViewOnce';
 import useLoopWhileVisible from '../partners/useLoopWhileVisible';
 import { GlassLink } from '../ui/glass-button';
@@ -47,12 +46,16 @@ function StatNumber({ value, play }) {
   return <span ref={ref}>{value ?? '0'}</span>;
 }
 
-const shortDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' });
+const eventDay = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+const deadlineDay = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' });
 const MARQUEE_MIN_CARDS = 8;
 
-function formatShortDate(value) {
-  const parsed = value ? new Date(`${value}T00:00:00`) : null;
-  return parsed && !Number.isNaN(parsed.getTime()) ? shortDate.format(parsed) : 'Rolling';
+/** When it happens, or for a program when applications close; no date means they take applications on a rolling basis. */
+function whenLabel(item) {
+  const parsed = item.date ? new Date(`${item.date}T00:00:00`) : null;
+  const valid = parsed && !Number.isNaN(parsed.getTime());
+  if (item.category === 'programs') return valid ? `Apply by ${deadlineDay.format(parsed)}` : 'Rolling';
+  return valid ? eventDay.format(parsed) : 'Date to be announced';
 }
 
 function RecentCard({ item, search, hidden }) {
@@ -63,11 +66,11 @@ function RecentCard({ item, search, hidden }) {
       tabIndex={hidden ? -1 : undefined}
       aria-hidden={hidden || undefined}
     >
-      <span className="hp-recent__image"><ListingThumb item={item} /></span>
       <span className="hp-recent__body">
         <small>
-          <NewListingBadge item={item} className="new-listing-badge--inline" />
-          {item.tag} · {formatShortDate(item.date)}
+          <NewListingBadge item={item} />
+          <span className="hp-recent__type">{item.tag}</span>
+          <span>{whenLabel(item)}</span>
         </small>
         <strong>{item.title}</strong>
       </span>
@@ -131,7 +134,7 @@ const CommunityPulse = () => {
       <div className="section-container">
         <h2 id="community-pulse-title" className="hp-close__title">
           Built by people.
-          <span>Growing daily.</span>
+          <span><span className="brand-highlight">Growing daily.</span></span>
         </h2>
         <p className="hp-close__description">
           The {isGeneric ? 'Berlin and Munich' : city.name} tech community in numbers, and the latest additions.
@@ -158,7 +161,7 @@ const CommunityPulse = () => {
           ) : null}
           {NEWSLETTER_ENABLED ? (
             <button type="button" className="hp-close__link" onClick={() => openNewsletter()}>
-              Get the weekly roundup
+              Get the newsletter
               <ChevronRightIcon aria-hidden="true" />
             </button>
           ) : null}

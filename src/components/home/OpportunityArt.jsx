@@ -97,7 +97,10 @@ const DECK_MOVE = 0.7;
 function deckTimeline(root) {
   const cards = gsap.utils.selector(root)('.ho-deck__card');
   const count = cards.length;
-  const pose = (slot) => ({ ...DECK_POSES[Math.min(slot, DECK_POSES.length - 1)], zIndex: count - slot });
+  // GSAP owns the transform, so the centring lives here rather than in CSS.
+  const pose = (slot) => ({
+    ...DECK_POSES[Math.min(slot, DECK_POSES.length - 1)], xPercent: -50, yPercent: -50, zIndex: count - slot,
+  });
   const timeline = gsap.timeline({ repeat: count > 1 ? -1 : 0 });
 
   cards.forEach((card, index) => timeline.set(card, pose(index), 0));

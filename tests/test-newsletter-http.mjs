@@ -87,7 +87,7 @@ function fixture(overrides = {}) {
 const signup = {
   email: "Person@Example.com",
   consent: true,
-  consent_version: "2026-09-29-v2",
+  consent_version: "2026-10-28-v4",
 };
 test("configured n8n key authenticates independently of the injected runtime JWT", async () => {
   const f = fixture({ NEWSLETTER_INTERNAL_KEY: "n8n-service-key" });

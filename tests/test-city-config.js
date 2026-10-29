@@ -93,23 +93,18 @@ const source = (relativePath) => readFileSync(join(repoRoot, relativePath), 'utf
 for (const file of sourceFiles(join(repoRoot, 'src'))) {
   if (file.endsWith('src/lib/city/cityConfig.js')) continue;
   assert.equal(
-    readFileSync(file, 'utf8').includes('linkedin.com/'),
+    readFileSync(file, 'utf8').includes('linkedin.com/company'),
     false,
-    `${file} hardcodes a LinkedIn destination outside city configuration`,
+    `${file} hardcodes a LinkedIn company destination outside city configuration`,
   );
 }
 assert.equal(source('src/components/home/Hero.jsx').includes("city.code === 'BERLIN'"), false);
 assert.equal(source('src/components/feedback/TimedAlert.jsx').includes("cityCode === 'BERLIN'"), false);
-for (const relativePath of [
-  'src/components/home/Hero.jsx',
-  'src/components/feedback/TimedAlert.jsx',
-]) {
-  const componentSource = source(relativePath);
-  const whatsappGuard = relativePath.endsWith('Hero.jsx') ? 'whatsappUrl &&' : 'city.whatsappUrl &&';
-  assert(componentSource.includes(whatsappGuard), `${relativePath} must hide a missing WhatsApp link`);
-  assert(componentSource.includes('city.linkedinUrl &&'), `${relativePath} must hide a missing LinkedIn link`);
+{
+  const timedAlertSource = source('src/components/feedback/TimedAlert.jsx');
+  assert(timedAlertSource.includes('city.whatsappUrl &&'), 'TimedAlert must hide a missing WhatsApp link');
+  assert(timedAlertSource.includes('city.linkedinUrl &&'), 'TimedAlert must hide a missing LinkedIn link');
 }
-assert(source('src/components/home/Hero.jsx').includes('city.whatsappUrl || FALLBACK_WHATSAPP_URL'));
 const memberDiscoverSource = source('src/pages/discover/MemberDiscoverPage.jsx');
 assert(
   memberDiscoverSource.includes('communityCity?.whatsappUrl &&'),

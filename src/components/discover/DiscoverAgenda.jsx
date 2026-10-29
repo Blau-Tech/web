@@ -78,8 +78,6 @@ function AgendaCard({ item, date, today, onClick, renderItemAction }) {
     <article className="discover-agenda-card group">
       <DiscoverArtwork
         imageUrl={item.imageUrl}
-        category={item.category}
-        label={tag}
         fallbackClassName={categoryStyle.fallback}
       />
       <span className="discover-agenda-image-wash pointer-events-none" aria-hidden />

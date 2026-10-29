@@ -1,4 +1,3 @@
-import '@fontsource-variable/manrope';
 import { useState } from 'react';
 import { Link, useLocation } from '../../lib/router';
 import { useCity } from '../../lib/city/cityContext';
@@ -124,6 +123,7 @@ const SiteFooter = () => {
 
             <FooterGroup title="Legal" className="site-footer__column--legal">
               <li><FooterLink href={withCity('/privacy')}>Privacy policy</FooterLink></li>
+              <li><FooterLink href={withCity('/terms')}>Terms of use</FooterLink></li>
             </FooterGroup>
           </div>
 

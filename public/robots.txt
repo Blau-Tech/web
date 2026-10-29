@@ -1,7 +1,27 @@
 # robots.txt for Blau Tech
 # https://www.blau-tech.de/robots.txt
+#
+# Search engines are welcome. Automated access and data mining of this site
+# need our written permission: https://www.blau-tech.de/terms
+# Text and data mining is reserved under § 44b(3) UrhG.
 
 User-agent: *
 Allow: /
+
+# AI training and bulk-data crawlers
+User-agent: GPTBot
+User-agent: CCBot
+User-agent: Google-Extended
+User-agent: anthropic-ai
+User-agent: ClaudeBot
+User-agent: Applebot-Extended
+User-agent: Amazonbot
+User-agent: Meta-ExternalAgent
+User-agent: Bytespider
+User-agent: cohere-ai
+User-agent: Diffbot
+User-agent: ImagesiftBot
+User-agent: omgili
+Disallow: /
 
 Sitemap: https://www.blau-tech.de/sitemap.xml

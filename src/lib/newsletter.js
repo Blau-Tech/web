@@ -10,9 +10,9 @@ export function openNewsletter(email = "") {
   window.dispatchEvent(new CustomEvent(NEWSLETTER_OPEN_EVENT, { detail: { email } }));
 }
 // Must match CONSENT_VERSION/CONSENT_TEXT in supabase/functions/newsletter/campaign.mjs.
-export const NEWSLETTER_CONSENT_VERSION = "2026-09-29-v2";
+export const NEWSLETTER_CONSENT_VERSION = "2026-10-28-v4";
 export const NEWSLETTER_CONSENT_TEXT =
-  "I would like to receive the BlauTech Weekly newsletter by email. I can unsubscribe at any time. See our Privacy Policy.";
+  "Send me the Blau Tech newsletter. See our Privacy Policy.";
 
 const ERROR_MESSAGES = {
   invalid_or_expired_link:

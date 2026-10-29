@@ -1,6 +1,6 @@
-export const CONSENT_VERSION = "2026-09-29-v2";
+export const CONSENT_VERSION = "2026-10-28-v4";
 export const CONSENT_TEXT =
-  "I would like to receive the BlauTech Weekly newsletter by email. I can unsubscribe at any time. See our Privacy Policy.";
+  "Send me the Blau Tech newsletter. See our Privacy Policy.";
 export const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -90,7 +90,7 @@ export function confirmationEmail({ site, token, address }) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#edf1f6;padding:32px 16px"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:24px;padding:36px 32px">
 <tr><td>
-<p style="margin:0;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#1e5fa6">BlauTech Weekly</p>
+<p style="margin:0;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#1e5fa6">Blau Tech newsletter</p>
 <h1 style="margin:14px 0 0;font-size:26px;line-height:1.15;font-weight:600">Confirm your subscription</h1>
 <p style="margin:16px 0 0;font-size:15px;line-height:1.6;color:#626770">Tap the button below to start receiving a weekly selection of events, hackathons and programs from Berlin, Munich and beyond.</p>
 <p style="margin:28px 0 0"><a href="${esc(link)}" style="display:inline-block;background:#0b0f19;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:14px 24px;border-radius:9999px">Confirm subscription</a></p>
@@ -100,7 +100,7 @@ export function confirmationEmail({ site, token, address }) {
 <p style="margin:20px 0 0;font-size:12px;line-height:1.5;color:#626770">${esc(footer)} · <a href="${esc(site)}/privacy" style="color:#626770">Privacy</a></p>
 </td></tr></table></body></html>`;
   const text = [
-    "Confirm your BlauTech Weekly subscription",
+    "Confirm your newsletter subscription",
     "",
     `You are confirming: "${CONSENT_TEXT}"`,
     "",

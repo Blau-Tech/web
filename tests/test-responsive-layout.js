@@ -87,15 +87,20 @@ assert(
   'desktop public navigation should expose its linked mega menu on hover with a page backdrop',
 );
 assert(
-  mobileNavbarSource.includes("{ label: 'Events', href: '/discover/events', opportunityType: 'events', hasFlyout: true }")
-    && !mobileNavbarSource.includes("{ label: 'Hackathons', href: '/discover/hackathons', opportunityType: 'hackathons' }")
-    && mobileNavbarSource.includes("{ label: 'Programs', href: '/discover/programs', opportunityType: 'programs', hasFlyout: true }")
+  mobileNavbarSource.includes("{ label: 'Discover', href: '/discover/events', opportunityType: 'events', hasFlyout: true }")
+    && mobileNavbarSource.includes("{ label: 'For organisers', href: '/partners', hasFlyout: true }")
+    && mobileNavbarSource.includes("{ label: 'Hackathons', href: '/discover/hackathons', opportunityType: 'hackathons' }")
+    && mobileNavbarSource.includes("{ label: 'Programs', href: '/discover/programs', opportunityType: 'programs' }")
+    && mobileNavbarSource.includes("['Explore Blau Tech', [")
     && mobileNavbarSource.includes("['Munich', '/discover/events?cities=munich&types=events']")
     && mobileNavbarSource.includes("['Berlin', '/discover/events?cities=berlin&types=events']")
-    && mobileNavbarSource.includes("['All Events', '/discover/events?types=events']")
-    && mobileNavbarSource.includes("['Events', [")
-    && mobileNavbarSource.includes("['Browse all events', '/discover/events?types=events']")
-    && mobileNavbarSource.includes("['Browse all hackathons', '/discover/hackathons?types=hackathons']")
+    && mobileNavbarSource.includes("['Events & hackathons', [")
+    && mobileNavbarSource.includes("['Events', '/discover/events?types=events']")
+    && mobileNavbarSource.includes("['Hackathons', '/discover/hackathons?types=hackathons']")
+    && mobileNavbarSource.includes("['Programs', [")
+    && mobileNavbarSource.includes("['Fellowships', '/discover/programs?types=programs&programType=LEARNING']")
+    && mobileNavbarSource.includes("['Hacker houses', '/discover/programs?types=programs&programType=RESIDENCY']")
+    && mobileNavbarSource.includes("['All programs', '/discover/programs?types=programs']")
     && !mobileNavbarSource.includes('Beginner-friendly events')
     && !mobileNavbarSource.includes('Engineering & developer events')
     && !mobileNavbarSource.includes('Startup & founder events')
@@ -103,21 +108,12 @@ assert(
     && !mobileNavbarSource.includes('Student hackathons')
     && !mobileNavbarSource.includes('Startup hackathons')
     && !mobileNavbarSource.includes("['Innovation challenges',")
-    && mobileNavbarSource.includes('  Programs: [')
-    && mobileNavbarSource.includes("['Explore programs', [")
-    && mobileNavbarSource.includes("['Munich', '/discover/programs?cities=munich&types=programs']")
-    && mobileNavbarSource.includes("['Berlin', '/discover/programs?cities=berlin&types=programs']")
-    && !mobileNavbarSource.includes("['Browse all programs', '/discover/programs?types=programs']")
-    && mobileNavbarSource.includes("['For individuals', [")
-    && mobileNavbarSource.includes("['Fellowships & learning programs', '/discover/programs?types=programs&programType=LEARNING']")
-    && mobileNavbarSource.includes("['Residencies & hacker houses', '/discover/programs?types=programs&programType=RESIDENCY']")
     && !mobileNavbarSource.includes("['For startups', ["),
-  'Events should offer city and type links; Programs should retain its exploration and audience columns',
-
+  'the Discover flyout should offer city links plus events, hackathons and programs; the stacked mobile menu lists those destinations directly',
 );
 assert(
-  stylesheet.includes('height: calc(100svh - var(--public-nav-height));')
-    && stylesheet.includes('padding-top: var(--public-nav-height);'),
+  stylesheet.includes('.home-scroll-panel {\n  position: relative;\n  width: 100%;\n  height: calc(100svh - var(--public-nav-height));')
+    && stylesheet.includes('.home-about-panel {\n  height: calc(100svh - var(--public-nav-height));'),
   'the homepage viewport and panels should share the public navbar height without a bottom gap',
 );
 const showcaseStylesheet = readFileSync(`${repoRoot}src/styles/discover-showcase.css`, 'utf8');
@@ -125,14 +121,14 @@ const eventAgendaSource = readFileSync(`${repoRoot}src/lib/discovery/eventAgenda
 const programBrowseSource = readFileSync(`${repoRoot}src/lib/discovery/programBrowse.js`, 'utf8');
 
 assert(
-  eventShowcaseSource.includes('<EventDayStrip')
-    && eventShowcaseSource.includes('title="Don’t miss."')
-    && eventShowcaseSource.includes('title="Everything coming up."')
-    && eventShowcaseSource.includes('title="Build something."')
-    && eventShowcaseSource.indexOf('<EventDayStrip') < eventShowcaseSource.indexOf('title="Don’t miss."')
-    && eventShowcaseSource.indexOf('title="Don’t miss."') < eventShowcaseSource.indexOf('title="Everything coming up."')
-    && eventShowcaseSource.indexOf('title="Everything coming up."') < eventShowcaseSource.indexOf('title="Build something."'),
-  'the events page should lead with the next two weeks, then highlights, the full agenda and hackathons',
+  eventShowcaseSource.includes('<PageHero')
+    && eventShowcaseSource.includes('<FilterBar>')
+    && eventShowcaseSource.includes('className="ds-agenda"')
+    && eventShowcaseSource.includes('<ShowcaseCta')
+    && eventShowcaseSource.indexOf('<PageHero') < eventShowcaseSource.indexOf('<FilterBar>')
+    && eventShowcaseSource.indexOf('<FilterBar>') < eventShowcaseSource.indexOf('className="ds-agenda"')
+    && eventShowcaseSource.indexOf('className="ds-agenda"') < eventShowcaseSource.indexOf('<ShowcaseCta'),
+  'the events page should open with its hero, then one filter bar, the day-by-day agenda and the organiser call to action',
 );
 assert(
   eventShowcaseSource.includes('upcomingEvents(items)')
@@ -143,42 +139,22 @@ assert(
     && eventShowcaseSource.includes("Object.freeze(['events', 'hackathons'])")
     && eventShowcaseSource.includes('label="Filter by city"')
     && eventShowcaseSource.includes('label="Filter by date"')
-    && eventShowcaseSource.includes('label="Filter by opportunity type"')
-    && eventShowcaseSource.includes('aria-label="Filter by interest"')
+    && eventShowcaseSource.includes('label="Filter by interest"')
     && !eventShowcaseSource.includes('onScroll='),
   'event browsing should only list upcoming events, grouped by day, filtered in place without an inner scroll box',
 );
 assert(
-  programShowcaseSource.includes('className="program-showcase-hero"')
-    && programShowcaseSource.includes('className="program-showcase-hero-video"')
-    && programShowcaseSource.includes('videos.pexels.com/video-files/6145421')
-    && !programShowcaseSource.includes('hackathons.example')
-    && programShowcaseSource.includes('autoPlay')
-    && programShowcaseSource.includes('muted')
-    && programShowcaseSource.includes('loop')
-    && programShowcaseSource.includes('playsInline')
-    && programShowcaseSource.includes('role="search"')
-    && programShowcaseSource.includes('Search programs with AI')
-    && programShowcaseSource.includes('PROGRAM_SEARCH_SUGGESTIONS.map')
-    && programShowcaseSource.includes("from '../../components/ui/glass-button'")
-    && programShowcaseSource.includes("from '../../components/ui/glass-material'")
-    && programShowcaseSource.includes('className="program-showcase-hero-prompt"')
-    && programShowcaseSource.indexOf('className="program-showcase-hero"')
-      < programShowcaseSource.indexOf('<DeadlineRunway')
-    && stylesheet.includes('.program-showcase-hero-video')
-    && stylesheet.includes('min-height: clamp(28rem, 62svh, 36rem);'),
-  'the programs page should open with the full-bleed video and AI-search hero',
-);
-assert(
-  programShowcaseSource.indexOf('<DeadlineRunway') < programShowcaseSource.indexOf('<ProgramTypeTiles')
-    && programShowcaseSource.indexOf('<ProgramTypeTiles') < programShowcaseSource.indexOf('ref={discoveryControlsRef}')
-    && programShowcaseSource.includes('title="Closing soon."')
-    && programShowcaseSource.includes('title="Programs to explore."')
-    && programBrowseSource.includes('export function deadlineRunway')
+  programShowcaseSource.includes('<PageHero')
+    && programShowcaseSource.includes('media="glacier"')
+    && !programShowcaseSource.includes('program-showcase-hero')
+    && !programShowcaseSource.includes('<video')
+    && programShowcaseSource.indexOf('<PageHero') < programShowcaseSource.indexOf('<FilterBar>')
+    && programShowcaseSource.indexOf('<FilterBar>') < programShowcaseSource.indexOf('id="all-programs"')
+    && programShowcaseSource.indexOf('id="all-programs"') < programShowcaseSource.indexOf('<ShowcaseCta')
     && programBrowseSource.includes('export function isOpenProgram')
     && programShowcaseSource.includes("programApplicationStatus(item) !== 'CLOSED'")
     && programShowcaseSource.includes('Recently closed'),
-  'program discovery should show closing deadlines, then types, then current programs, with closed ones set aside',
+  'the programs page should open with the Glacier hero, then one filter bar and the current programs, with closed ones set aside'
 );
 assert(
   !programShowcaseSource.includes('SAMPLE_PROGRAMS')

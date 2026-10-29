@@ -25,7 +25,7 @@ assert(
   'the homepage CTA should go straight to events',
 );
 assert.equal(heroSource.includes("navigate('/member/setup')"), false);
-assert(heroSource.includes('Your guide to tech in'));
+assert(heroSource.includes('Find your next opportunity'));
 assert.equal(heroSource.includes('Where are you based?'), false);
 assert.equal(heroSource.includes('setHeroView'), false);
 assert.equal(heroSource.includes('DiscoveryPreferenceDialog'), false);

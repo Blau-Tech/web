@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import PopUp from '../feedback/PopUp';
-import { GlassMaterial } from '../ui/glass-material';
 import { requestModalOwnership } from '../../lib/modalCoordination';
 import { Link } from '../../lib/router';
 import {
@@ -10,6 +8,7 @@ import {
   NEWSLETTER_OPEN_EVENT,
   useNewsletterSignup,
 } from '../../lib/newsletter';
+import '../../styles/newsletter.css';
 
 const DONE = {
   check_email: ['Check your inbox', 'Tap the link we sent to confirm.'],
@@ -70,7 +69,7 @@ export default function NewsletterModal() {
   const done = DONE[signup.status];
   const confirming = token && !signup.status;
   const [title, description] = done
-    || (confirming ? ['Confirm subscription', 'One tap and you are in.'] : ['BlauTech Weekly', 'The best events, hackathons and programs.\nOnce a week.']);
+    || (confirming ? ['Confirm subscription', 'One tap and you are in.'] : ['Newsletter', 'Events, hackathons and programs, once a week.']);
 
   return (
     <PopUp
@@ -92,7 +91,7 @@ export default function NewsletterModal() {
         </button>
       ) : (
         <form onSubmit={signup.subscribe} className="newsletter-popup__form">
-          <GlassMaterial className="newsletter-popup__field" materialClassName="newsletter-popup__field-surface">
+          <div className="newsletter-popup__field">
             <label htmlFor="newsletter-popup-email" className="sr-only">Email address</label>
             <input
               id="newsletter-popup-email"
@@ -109,11 +108,10 @@ export default function NewsletterModal() {
               type="submit"
               className="newsletter-popup__cta"
               disabled={signup.busy || !signup.consent}
-              aria-label="Subscribe"
             >
-              {signup.busy ? '…' : <ArrowRightIcon aria-hidden="true" />}
+              {signup.busy ? 'Sending…' : 'Subscribe'}
             </button>
-          </GlassMaterial>
+          </div>
           <div hidden aria-hidden="true">
             <label htmlFor="newsletter-popup-website">Website</label>
             <input

@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        // The brand face, from brand/brand.json via brand/brand.app.css.
+        sans: ['var(--brand-font)'],
       },
     },
   },

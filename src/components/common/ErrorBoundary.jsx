@@ -1,7 +1,5 @@
 import { Component } from 'react';
-import AnimatedBackground from '../layout/AnimatedBackground';
 import MobileNavbar from '../layout/MobileNavbar';
-import { GlassButton } from '../ui/glass-button';
 
 /**
  * ErrorBoundary catches any unhandled JavaScript error thrown during
@@ -53,7 +51,7 @@ class ErrorBoundary extends Component {
   render() {
     if (!this.state.hasError) return this.props.children;
 
-    const { fallback, title = "We couldn't load this page", showMessage = false } = this.props;
+    const { fallback, title = "That page didn't load", showMessage = false } = this.props;
 
     if (fallback) {
       return typeof fallback === 'function'
@@ -63,11 +61,10 @@ class ErrorBoundary extends Component {
 
     const message = showMessage && this.state.error?.message
       ? this.state.error.message
-      : 'We hit a temporary snag. Try again, or return home and continue exploring.';
+      : 'A temporary snag. Try again, or head back home.';
 
     return (
       <div className="route-fallback-shell relative min-h-screen overflow-hidden">
-        <AnimatedBackground />
         <div className="relative z-10 flex min-h-screen flex-col">
           <MobileNavbar />
           <main
@@ -76,22 +73,19 @@ class ErrorBoundary extends Component {
             role="alert"
           >
             <div className="route-fallback__content">
-              <h1 id="route-fallback-title" className="heading-1 route-fallback__title">
+              <div className="brand-pattern brand-pattern--soft route-fallback__pattern" aria-hidden="true" />
+              <h1 id="route-fallback-title" className="route-fallback__title">
                 {title}
               </h1>
-              <p className="body-section route-fallback__copy">{message}</p>
+              <p className="route-fallback__copy">{message}</p>
               <div className="route-fallback__actions">
-                <GlassButton type="button" onClick={this.reset}>
+                <button type="button" className="btn-primary" onClick={this.reset}>
                   Try again
-                </GlassButton>
+                </button>
+                <a href="/" className="btn-secondary">
+                  Go home
+                </a>
               </div>
-              <button
-                type="button"
-                className="route-fallback__reload-link"
-                onClick={() => window.location.reload()}
-              >
-                Refresh page
-              </button>
             </div>
           </main>
         </div>
