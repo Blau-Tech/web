@@ -91,7 +91,7 @@ export default function TimedAlert() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:inset-auto lg:bottom-6 lg:right-6 lg:p-0"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:inset-auto lg:bottom-[4.75rem] lg:right-4 lg:p-0"
             id="community-alert-dialog"
             role="dialog"
             aria-modal="true"
@@ -102,29 +102,26 @@ export default function TimedAlert() {
               <div className={`relative max-h-[calc(100svh-2rem)] overflow-x-hidden overflow-y-auto rounded-[1.625rem] bg-brand-ground font-brand text-white ${
                 isCompact ? 'p-4 sm:p-5' : 'p-5 sm:p-6'
               }`}>
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-36 overflow-hidden" aria-hidden="true">
-                  <div className="brand-pattern brand-pattern--full opacity-90" style={{ '--pattern-blur': '22px' }} />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-ground/40 to-brand-ground" />
-                </div>
+                <div>
+                  <div className={`flex items-start justify-between gap-4 ${isCompact ? 'mb-2' : 'mb-3'}`}>
+                    <h3
+                      id="community-alert-title"
+                      className={`font-medium tracking-[-0.02em] text-white ${
+                        isCompact ? 'text-2xl leading-[1.15]' : 'text-[1.75rem] leading-[1.1]'
+                      }`}
+                    >
+                      Never miss <span className="text-brand-accent-lite">what&apos;s happening.</span>
+                    </h3>
 
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={handleDismiss}
-                    className="absolute -right-1 -top-1 flex h-9 w-9 items-center justify-center text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent-lite"
-                    aria-label="Close community updates"
-                  >
-                    <XMarkIcon className="h-5 w-5" />
-                  </button>
-
-                  <h3
-                    id="community-alert-title"
-                    className={`pr-10 font-medium tracking-[-0.02em] text-white ${
-                      isCompact ? 'mb-2 pt-10 text-2xl leading-[1.15]' : 'mb-3 pt-14 text-[1.75rem] leading-[1.1]'
-                    }`}
-                  >
-                    Never miss <span className="text-brand-accent-lite">what&apos;s happening.</span>
-                  </h3>
+                    <button
+                      type="button"
+                      onClick={handleDismiss}
+                      className="-mr-2 -mt-1 flex h-9 w-9 shrink-0 items-center justify-center text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent-lite"
+                      aria-label="Close community updates"
+                    >
+                      <XMarkIcon className="h-5 w-5" />
+                    </button>
+                  </div>
 
                   <p
                     id="community-alert-description"
