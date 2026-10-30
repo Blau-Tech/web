@@ -319,7 +319,7 @@ function Partners() {
                       }}
                       placeholder={submissionCopy.placeholder}
                       aria-invalid={Boolean(eventError)}
-                      aria-describedby={eventError ? 'opportunity-link-error' : 'opportunity-link-help'}
+                      aria-describedby={eventError ? 'opportunity-link-error' : undefined}
                     />
                     <button type="submit" disabled={isEventSubmitting}>
                       {isEventSubmitting ? 'Sending…' : submissionCopy.button}<ArrowRightIcon aria-hidden="true" />
@@ -327,9 +327,7 @@ function Partners() {
                   </GlassMaterial>
                   {eventError ? (
                     <small id="opportunity-link-error" className="bp-submit-error" role="alert">{eventError}</small>
-                  ) : (
-                    <small id="opportunity-link-help" className="bp-submit-help">Use the original registration or application page.</small>
-                  )}
+                  ) : null}
                 </form>
               )}
             </div>

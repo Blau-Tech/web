@@ -209,9 +209,7 @@
 
 .bp-submit-field:has(input[aria-invalid='true']) .bp-submit-field__surface { outline: 1.5px solid color-mix(in srgb, var(--brand-deep) 45%, transparent); outline-offset: 2px; }
 
-.bp-submit-help,
 .bp-submit-error { display: block; font-size: 0.74rem; line-height: 1.4; }
-.bp-submit-help { color: color-mix(in srgb, var(--brand-ground) 52%, #fff); }
 .bp-submit-error { color: var(--brand-deep); font-weight: 550; }
 
 
